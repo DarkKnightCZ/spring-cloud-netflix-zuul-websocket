@@ -28,6 +28,7 @@ import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.github.mthizo247.cloud.netflix.zuul.web.socket.WebSocketHttpHeadersCallback;
+import com.github.mthizo247.cloud.netflix.zuul.web.socket.WebSocketMessageAccessor;
 
 /**
  * @author Ronald Mthombeni
@@ -35,7 +36,8 @@ import com.github.mthizo247.cloud.netflix.zuul.web.socket.WebSocketHttpHeadersCa
 public class BasicAuthPrincipalHeadersCallback implements WebSocketHttpHeadersCallback {
     protected final Log logger = LogFactory.getLog(getClass());
 	public WebSocketHttpHeaders getWebSocketHttpHeaders(
-			WebSocketSession userAgentSession) {
+			WebSocketSession userAgentSession,
+			WebSocketMessageAccessor messageAccessor) {
 		WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
 		Principal principal = userAgentSession.getPrincipal();
 		if (principal != null) {
@@ -55,6 +57,6 @@ public class BasicAuthPrincipalHeadersCallback implements WebSocketHttpHeadersCa
                 logger.debug("Skipped adding basic authentication header since user session principal is null");
             }
         }
-		return headers;
-	}
+        return headers;
+    }
 }

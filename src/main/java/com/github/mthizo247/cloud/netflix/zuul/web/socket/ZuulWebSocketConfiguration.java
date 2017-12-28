@@ -161,7 +161,8 @@ public class ZuulWebSocketConfiguration extends AbstractWebSocketMessageBrokerCo
         return new WebSocketHttpHeadersCallback() {
             @Override
             public WebSocketHttpHeaders getWebSocketHttpHeaders(
-                    WebSocketSession userAgentSession) {
+                    WebSocketSession userAgentSession,
+                    WebSocketMessageAccessor connectMessage) {
                 return new WebSocketHttpHeaders();
             }
         };

@@ -46,17 +46,18 @@ public class ProxyWebSocketConnectionManagerTests {
 	private ListenableFuture<StompSession> listenableFuture = (ListenableFuture<StompSession>) mock(
 			ListenableFuture.class);
 	private ErrorHandler errHandler = mock(ErrorHandler.class);
+	private WebSocketMessageAccessor connectMessage = WebSocketMessageAccessor.create("testmessage");
 
 	@Before
 	public void init() throws Exception {
 		String uri = "http://example.com";
 		proxyConnectionManager = new ProxyWebSocketConnectionManager(messagingTemplate,
-				stompClient, wsSession, headersCallback, uri);
+				stompClient, wsSession, headersCallback, uri, connectMessage);
 
 		proxyConnectionManager.errorHandler(errHandler);
 
 		when(listenableFuture.get()).thenReturn(serverSession);
-		when(stompClient.connect(uri, headersCallback.getWebSocketHttpHeaders(wsSession),
+		when(stompClient.connect(uri, headersCallback.getWebSocketHttpHeaders(wsSession, connectMessage),
 				proxyConnectionManager)).thenReturn(listenableFuture);
 	}
 

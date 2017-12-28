@@ -26,5 +26,5 @@ import org.springframework.web.socket.WebSocketSession;
  * @author Salman Noor
  */
 public interface WebSocketHttpHeadersCallback {
-	WebSocketHttpHeaders getWebSocketHttpHeaders(WebSocketSession userAgentSession);
+	WebSocketHttpHeaders getWebSocketHttpHeaders(WebSocketSession userAgentSession, WebSocketMessageAccessor connectMessage);
 }

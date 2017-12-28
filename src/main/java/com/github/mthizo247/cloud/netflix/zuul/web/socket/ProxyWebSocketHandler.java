@@ -147,7 +147,7 @@ public class ProxyWebSocketHandler extends WebSocketHandlerDecorator {
 
 		if (StompCommand.CONNECT.toString().equalsIgnoreCase(accessor.getCommand())) {
 			handled = true;
-			connectToProxiedTarget(session);
+			connectToProxiedTarget(session, accessor);
 		}
 
 		if (!handled) {
@@ -158,7 +158,7 @@ public class ProxyWebSocketHandler extends WebSocketHandlerDecorator {
 		}
 	}
 
-	private void connectToProxiedTarget(WebSocketSession session) {
+	private void connectToProxiedTarget(WebSocketSession session, WebSocketMessageAccessor accessor) {
 		URI sessionUri = session.getUri();
 		ZuulWebSocketProperties.WsBrokerage wsBrokerage = getWebSocketBrokarage(
 				sessionUri);
@@ -178,7 +178,7 @@ public class ProxyWebSocketHandler extends WebSocketHandlerDecorator {
                 .toUriString();
 
 		ProxyWebSocketConnectionManager connectionManager = new ProxyWebSocketConnectionManager(
-				messagingTemplate, stompClient, session, headersCallback, uri);
+				messagingTemplate, stompClient, session, headersCallback, uri, accessor);
 		connectionManager.errorHandler(this.errorHandler);
 		managers.put(session, connectionManager);
 		connectionManager.start();

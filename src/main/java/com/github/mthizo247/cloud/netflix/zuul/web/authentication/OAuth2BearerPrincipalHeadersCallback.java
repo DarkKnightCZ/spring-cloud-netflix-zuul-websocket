@@ -17,6 +17,8 @@
 package com.github.mthizo247.cloud.netflix.zuul.web.authentication;
 
 import com.github.mthizo247.cloud.netflix.zuul.web.socket.WebSocketHttpHeadersCallback;
+import com.github.mthizo247.cloud.netflix.zuul.web.socket.WebSocketMessageAccessor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpHeaders;
@@ -32,10 +34,11 @@ import java.util.Collections;
  * @author Marcin Podlodowski
  */
 public class OAuth2BearerPrincipalHeadersCallback implements WebSocketHttpHeadersCallback {
-    private final  Log logger = LogFactory.getLog(getClass());
+    private final Log logger = LogFactory.getLog(getClass());
 
     @Override
-    public WebSocketHttpHeaders getWebSocketHttpHeaders(final WebSocketSession userAgentSession) {
+    public WebSocketHttpHeaders getWebSocketHttpHeaders(final WebSocketSession userAgentSession,
+            final WebSocketMessageAccessor messageAccessor) {
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
         Principal principal = userAgentSession.getPrincipal();
         if (principal != null && OAuth2Authentication.class.isAssignableFrom(principal.getClass())) {
@@ -43,13 +46,12 @@ public class OAuth2BearerPrincipalHeadersCallback implements WebSocketHttpHeader
             OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) oAuth2Authentication.getDetails();
             String accessToken = details.getTokenValue();
             headers.put(HttpHeaders.AUTHORIZATION, Collections.singletonList("Bearer " + accessToken));
-            if(logger.isDebugEnabled()) {
-                logger.debug("Added Oauth2 bearer token authentication header for user " +
-                        principal.getName() + " to web sockets http headers");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Added Oauth2 bearer token authentication header for user " + principal.getName()
+                        + " to web sockets http headers");
             }
-        }
-        else {
-            if(logger.isDebugEnabled()) {
+        } else {
+            if (logger.isDebugEnabled()) {
                 logger.debug("Skipped adding basic authentication header since user session principal is null");
             }
         }

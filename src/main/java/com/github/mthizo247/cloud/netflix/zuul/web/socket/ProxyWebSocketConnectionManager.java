@@ -51,15 +51,18 @@ public class ProxyWebSocketConnectionManager extends ConnectionManagerSupport
 	private Map<String, StompSession.Subscription> subscriptions = new ConcurrentHashMap<>();
 	private ErrorHandler errorHandler;
 	private SimpMessagingTemplate messagingTemplate;
+	private WebSocketMessageAccessor connectMessage;
 
 	public ProxyWebSocketConnectionManager(SimpMessagingTemplate messagingTemplate,
 			WebSocketStompClient stompClient, WebSocketSession userAgentSession,
-			WebSocketHttpHeadersCallback httpHeadersCallback, String uri) {
+			WebSocketHttpHeadersCallback httpHeadersCallback, String uri,
+			WebSocketMessageAccessor connectMessage) {
 		super(uri);
 		this.messagingTemplate = messagingTemplate;
 		this.stompClient = stompClient;
 		this.userAgentSession = userAgentSession;
 		this.httpHeadersCallback = httpHeadersCallback;
+		this.connectMessage = connectMessage;
 	}
 
 	public void errorHandler(ErrorHandler errorHandler) {
@@ -68,7 +71,7 @@ public class ProxyWebSocketConnectionManager extends ConnectionManagerSupport
 
 	private WebSocketHttpHeaders buildWebSocketHttpHeaders() {
 		if (httpHeadersCallback != null) {
-			return httpHeadersCallback.getWebSocketHttpHeaders(userAgentSession);
+			return httpHeadersCallback.getWebSocketHttpHeaders(userAgentSession, connectMessage);
 		}
 		return new WebSocketHttpHeaders();
 	}
